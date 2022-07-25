@@ -20,24 +20,75 @@ private:
 	Node<T>* first;
 	Node<T>* last;
 public:
-	DubleList() : first(nullptr), last(nullptr) {};
+	DubleList() {
+		first = nullptr;
+		last = nullptr;
+	};
+	~DubleList() {
+		RemoveAll();
+	};
 
 
 	void AddNode(const T data) {
 		Node<T>* node = new Node<T>(data);
-		node->next = 0;
-
-		node->prev = last;
-		if (last != 0)
-			last->next = node;
-
-		// Если элемент первый, то он одновременно и голова и хвост
-		if (first == node)
+		if (first == nullptr)
+		{
 			first = last = node;
+		}
 		else
-			// иначе новый элемент - хвостовой
-			last = node;
+		{
+			last->next = node; // делаем резервное место под след значение
+			node->prev = last;
+		}
+		last = node;
 
+
+	}
+
+	void Remove(const T data) {
+		Node<T>* current = first;
+		
+		while (current != nullptr)
+		{
+			if (current->data == data)
+			{
+				if (current == first)
+				{
+					first = current->next;
+					delete current;
+				}
+				else if (current == last) {
+					last->prev->next = nullptr;
+					last = current->prev;
+					delete current;
+				}
+				else {
+					current->prev->next = current->next;
+					current->next->prev = current->prev;
+					delete current;
+				}
+				
+			}
+			current = current->next;
+		}		
+	}
+
+	void RemoveBegin() {
+		Node<T>* current = last;
+		last->prev->next = nullptr;
+		last = current->prev;
+		delete current;
+	}
+
+	void RemoveAll() {
+		Node<T>* current = first;
+		while (current != nullptr)
+		{
+			first = current->next;
+			delete current;
+			current = first;
+		}
+		first = nullptr;
 	}
 
 
@@ -45,21 +96,22 @@ public:
 		Node<T>* current = first;
 		while (current != nullptr)
 		{
-			cout << current << endl;
+			cout << current->data << endl;
 			current = current->next;
 		}
 	}
 };
 
-void main()
+int main()
 {
 	setlocale(LC_ALL, "Russian");
 	DubleList<int> list;
 	//DubleList<int> list = DubleList<int>();
-	list.AddNode(1);
+	list.AddNode(4);
 	list.AddNode(2);
 	list.AddNode(3);
-	list.AddNode(4);
+	list.AddNode(5);
+	list.Remove(3);
 	list.Print();
 
 
