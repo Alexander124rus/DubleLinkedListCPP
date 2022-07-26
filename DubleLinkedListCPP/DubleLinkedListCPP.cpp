@@ -44,36 +44,73 @@ public:
 
 
 	}
+	/*void Remove(T obj) {
+		Node<T>* current = new Node<T>(obj);
+		Node<T>* ptr = nullptr;
 
-	void Remove(const T data) {
+		if (current == first)
+		{
+			RemoveBegin();
+		}
+		else if (current == last) {
+			RemoveEnd();
+		}
+		else {
+			current->next->prev = current->prev;
+			current->prev->next = current->next;
+			
+			delete current;
+		}
+	}*/
+	void Remove(T obj) {
 		Node<T>* current = first;
+		
 		
 		while (current != nullptr)
 		{
-			if (current->data == data)
+			if (current->data == obj)
 			{
 				if (current == first)
 				{
-					first = current->next;
+					RemoveBegin();
 					delete current;
+					current = first;
 				}
 				else if (current == last) {
-					last->prev->next = nullptr;
-					last = current->prev;
-					delete current;
+					RemoveEnd();
 				}
 				else {
-					current->prev->next = current->next;
-					current->next->prev = current->prev;
+
+
+					Node<T>* temp = current->prev;
+					
+					/*current->prev->next = current->next;
+					current->next->prev = current->prev;*/
+
+					temp->next = current->next;
+					current->next->prev = temp;
+
 					delete current;
+					current = temp;
+					
 				}
 				
 			}
 			current = current->next;
-		}		
+		}
+		
+		
 	}
 
-	void RemoveBegin() {
+	Node<T>* RemoveBegin() {
+		Node<T>* current = first;
+		
+		first = current->next;
+		first->prev = nullptr;
+		return first;
+	}
+
+	void RemoveEnd() {
 		Node<T>* current = last;
 		last->prev->next = nullptr;
 		last = current->prev;
@@ -107,10 +144,10 @@ int main()
 	setlocale(LC_ALL, "Russian");
 	DubleList<int> list;
 	//DubleList<int> list = DubleList<int>();
-	list.AddNode(4);
-	list.AddNode(2);
 	list.AddNode(3);
-	list.AddNode(5);
+	list.AddNode(2);
+	list.AddNode(4);
+	list.AddNode(6);
 	list.Remove(3);
 	list.Print();
 
