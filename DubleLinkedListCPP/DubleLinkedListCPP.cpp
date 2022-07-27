@@ -11,6 +11,7 @@ private:
 		Node<ITEM>* next;
 		Node<ITEM>* prev;
 		Node(ITEM data, Node<ITEM>* next = nullptr, Node<ITEM>* prev = nullptr) : data(data), next(next), prev(prev) {}
+		//Альтернативное объявление конструктора
 		/*Node(ITEM data, Node<ITEM>* next = nullptr, Node<ITEM>* prev = nullptr) {
 			this.data = data;
 			this.next = next;
@@ -28,7 +29,6 @@ public:
 		RemoveAll();
 	};
 
-
 	void AddNode(const T data) {
 		Node<T>* node = new Node<T>(data);
 		if (first == nullptr)
@@ -41,79 +41,57 @@ public:
 			node->prev = last;
 		}
 		last = node;
-
-
 	}
-	/*void Remove(T obj) {
-		Node<T>* current = new Node<T>(obj);
-		Node<T>* ptr = nullptr;
-
-		if (current == first)
-		{
-			RemoveBegin();
-		}
-		else if (current == last) {
-			RemoveEnd();
-		}
-		else {
-			current->next->prev = current->prev;
-			current->prev->next = current->next;
-			
-			delete current;
-		}
-	}*/
+	
 	void Remove(T obj) {
 		Node<T>* current = first;
-		
-		
 		while (current != nullptr)
 		{
 			if (current->data == obj)
 			{
 				if (current == first)
-				{
-					RemoveBegin();
+				{		
+					first = current->next;
+					first->prev = nullptr;
 					delete current;
 					current = first;
 				}
 				else if (current == last) {
-					RemoveEnd();
+					last = current->prev;
+					last->next = nullptr;
+					delete current;
+					current = last;
 				}
 				else {
-
-
+					//Вариант 1
 					Node<T>* temp = current->prev;
-					
-					/*current->prev->next = current->next;
-					current->next->prev = current->prev;*/
-
 					temp->next = current->next;
 					current->next->prev = temp;
-
 					delete current;
 					current = temp;
-					
+
+					//Вариант 2
+					/*current->prev->next = current->next;
+					current->next->prev = current->prev;*/
 				}
-				
 			}
 			current = current->next;
 		}
-		
-		
+		//Вариант 2
+		/*delete current;*/
 	}
 
-	Node<T>* RemoveBegin() {
+	void RemoveBegin() {
 		Node<T>* current = first;
-		
 		first = current->next;
 		first->prev = nullptr;
-		return first;
+		delete current;
 	}
 
 	void RemoveEnd() {
 		Node<T>* current = last;
-		last->prev->next = nullptr;
 		last = current->prev;
+		last->prev->next = nullptr;
 		delete current;
 	}
 
@@ -127,7 +105,6 @@ public:
 		}
 		first = nullptr;
 	}
-
 
 	void Print() {
 		Node<T>* current = first;
@@ -145,9 +122,9 @@ int main()
 	DubleList<int> list;
 	//DubleList<int> list = DubleList<int>();
 	list.AddNode(3);
-	list.AddNode(2);
-	list.AddNode(4);
-	list.AddNode(6);
+	list.AddNode(3);
+	list.AddNode(3);
+	list.AddNode(3);
 	list.Remove(3);
 	list.Print();
 
